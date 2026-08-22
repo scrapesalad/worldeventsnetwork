@@ -7,6 +7,7 @@ $replacements = [ordered]@{
   'Run Rob Run' = 'World Events Network'
   'Robert Aperios' = 'World Events Network'
   'mailto:hello@robertaperios.com' = '#contact'
+  'action:"mailto:hello@robertaperios.com"' = 'action:"#contact"'
   'Creative' = 'WORLD'
   'Developer' = 'EVENTS'
   'Location' = 'Salt Lake City, Utah  Worldwide'
@@ -94,6 +95,14 @@ $replacements = [ordered]@{
   'label:"Contra"' = 'label:"Scott Kerr"'
   'name:["Robert","Aperios"]' = 'name:["World","Events Network"]'
   'label:"Experience",href:"#expertise"' = 'label:"Expertise",href:"#expertise"'
+  'locationPrefix:"Location"' = 'locationPrefix:"Salt Lake City, Utah  Worldwide"'
+  '/media/side-2.webp","alt":"Side portrait two"' = '/public/images/skottkerr/scott1.png","alt":"Scott Kerr, Founder and Principal of World Events Network"'
+  'src:"/media/side-2.webp",alt:"Side portrait two"' = 'src:"/public/images/skottkerr/scott1.png",alt:"Side portrait two"'
+  '/public/videos/rockstock/rockstockvideo-web.mp4' = '/public/videos/rockstock/rockstockvideo.mp4'
+  '"contactLinks":[{"label":"World Events Network","href":"https://www.linkedin.com"},{"label":"Scott Kerr","href":"https://www.facebook.com"},{"label":"Scott Kerr","href":"https://www.linkedin.com/company/world-events-network/"},{"label":"Scott Kerr","href":"https://www.linkedin.com/in/scott-kerr-22889b3/"}]' = '"contactLinks":[{"label":"World Events Network","href":"https://www.linkedin.com/company/world-events-network/"},{"label":"Scott Kerr","href":"https://www.linkedin.com/in/scott-kerr-22889b3/"},{"label":"Facebook","href":"https://www.facebook.com/worldeventsnetwork/"}]'
+  'contactLinks:[{label:"World Events Network",href:"https://www.linkedin.com/company/world-events-network/"},{label:"Scott Kerr",href:"https://www.linkedin.com/in/scott-kerr-22889b3/"},{label:"Facebook",href:"https://www.facebook.com/worldeventsnetwork/"},{label:"Scott Kerr",href:"https://www.linkedin.com/in/scott-kerr-22889b3/"}]' = 'contactLinks:[{label:"World Events Network",href:"https://www.linkedin.com/company/world-events-network/"},{label:"Scott Kerr",href:"https://www.linkedin.com/in/scott-kerr-22889b3/"},{label:"Facebook",href:"https://www.facebook.com/worldeventsnetwork/"}]'
+  'contactLinks:[{label:"World Events Network",href:"https://www.linkedin.com/company/world-events-network/"},{label:"Scott Kerr",href:"https://www.linkedin.com/in/scott-kerr-22889b3/"},{label:"Scott Kerr",href:"https://www.facebook.com/worldeventsnetwork/"},{label:"Scott Kerr",href:"https://www.linkedin.com/in/scott-kerr-22889b3/"}]' = 'contactLinks:[{label:"World Events Network",href:"https://www.linkedin.com/company/world-events-network/"},{label:"Scott Kerr",href:"https://www.linkedin.com/in/scott-kerr-22889b3/"},{label:"Facebook",href:"https://www.facebook.com/worldeventsnetwork/"}]'
+  'site-footer-contact-list"><a href="https://www.linkedin.com/company/world-events-network/" class="site-footer-contact-link">World Events Network</a><a href="https://www.linkedin.com/in/scott-kerr-22889b3/" class="site-footer-contact-link">Scott Kerr</a><a href="https://www.facebook.com/worldeventsnetwork/" class="site-footer-contact-link">Facebook</a><a href="https://www.linkedin.com/in/scott-kerr-22889b3/" class="site-footer-contact-link">Scott Kerr</a></div>' = 'site-footer-contact-list"><a href="https://www.linkedin.com/company/world-events-network/" class="site-footer-contact-link">World Events Network</a><a href="https://www.linkedin.com/in/scott-kerr-22889b3/" class="site-footer-contact-link">Scott Kerr</a><a href="https://www.facebook.com/worldeventsnetwork/" class="site-footer-contact-link">Facebook</a></div>'
   '\"label\":\"Linkedin\"' = '\"label\":\"World Events Network\"'
   '\"label\":\"Facebook\"' = '\"label\":\"Scott Kerr\"'
   '\"label\":\"Instagram\"' = '\"label\":\"Facebook\"'
@@ -115,6 +124,9 @@ $replacements = [ordered]@{
 
 foreach ($file in $files) {
   $text = [IO.File]::ReadAllText((Resolve-Path $file))
+  $text = $text.Replace('<style id="wen-runtime-overflow">html,body{overflow-x:hidden}</style>', '')
+  $text = $text.Replace('<style id="wen-scroll-sticky-fix">.page-entry-tools-sticky{align-self:stretch}</style>', '')
+  $text = $text.Replace('<style id="wen-scroll-sticky-fix">.page-entry-tools-section{display:block}.page-entry-tools-sticky{align-self:stretch}</style>', '')
   if ($file -like '*3p2ia24p2ozer.js') {
     $match = [regex]::Match($text, 'let l0=(.*?),l1=', [Text.RegularExpressions.RegexOptions]::Singleline)
     if (-not $match.Success) { throw "Could not find embedded site data in $file" }
@@ -124,6 +136,10 @@ foreach ($file in $files) {
     }
     $text = $text.Substring(0, $match.Groups[1].Index) + $data + $text.Substring($match.Groups[1].Index + $match.Groups[1].Length)
     $text = [regex]::Replace($text, 'let l5=.*?,l4=', 'let l5={en:l0,da:l0,pt:l0},l4=', [Text.RegularExpressions.RegexOptions]::Singleline)
+    $text = $text.Replace('action:"mailto:hello@robertaperios.com"', 'action:"#contact"')
+    $text = $text.Replace('contactLinks:[{label:"World Events Network",href:"https://www.linkedin.com/company/world-events-network/"},{label:"Scott Kerr",href:"https://www.linkedin.com/in/scott-kerr-22889b3/"},{label:"Scott Kerr",href:"https://www.facebook.com/worldeventsnetwork/"}]', 'contactLinks:[{label:"World Events Network",href:"https://www.linkedin.com/company/world-events-network/"},{label:"Scott Kerr",href:"https://www.linkedin.com/in/scott-kerr-22889b3/"},{label:"Facebook",href:"https://www.facebook.com/worldeventsnetwork/"}]')
+    $text = $text.Replace('l="en"===a?t:l5[a]??t', 'l=l5[a]??t')
+    $text = $text.Replace('suppressHydrationWarning:!0,', '')
   } else {
     foreach ($entry in $replacements.GetEnumerator()) {
       $text = $text.Replace($entry.Key, $entry.Value)
@@ -135,6 +151,13 @@ foreach ($file in $files) {
       $og = '<meta property="og:title" content="World Events Network | Sports & Mass Participation Event Experts"/><meta property="og:description" content="World Events Network provides event strategy, marathon and race management, participant growth, event operations and elite-athlete expertise."/><meta property="og:type" content="website"/><meta property="og:site_name" content="World Events Network"/>'
       $text = $text.Replace('</head>', $og + '</head>')
     }
+    if (-not $text.Contains('rel="canonical"')) {
+      $text = $text.Replace('</head>', '<link rel="canonical" href="/"/><meta property="og:url" content="/"/></head>')
+    }
+    $text = $text.Replace('\"contactLinks\":[{\"label\":\"World Events Network\",\"href\":\"https://www.linkedin.com\"},{\"label\":\"Scott Kerr\",\"href\":\"https://www.facebook.com\"},{\"label\":\"Scott Kerr\",\"href\":\"https://www.linkedin.com/company/world-events-network/\"},{\"label\":\"Scott Kerr\",\"href\":\"https://www.linkedin.com/in/scott-kerr-22889b3/\"}]', '\"contactLinks\":[{\"label\":\"World Events Network\",\"href\":\"https://www.linkedin.com/company/world-events-network/\"},{\"label\":\"Scott Kerr\",\"href\":\"https://www.linkedin.com/in/scott-kerr-22889b3/\"},{\"label\":\"Facebook\",\"href\":\"https://www.facebook.com/worldeventsnetwork/\"}]')
+    $text = $text.Replace('\"contactLinks\":[{\"label\":\"World Events Network\",\"href\":\"https://www.linkedin.com/company/world-events-network/\"},{\"label\":\"Scott Kerr\",\"href\":\"https://www.linkedin.com/in/scott-kerr-22889b3/\"},{\"label\":\"Scott Kerr\",\"href\":\"https://www.facebook.com/worldeventsnetwork/\"}]', '\"contactLinks\":[{\"label\":\"World Events Network\",\"href\":\"https://www.linkedin.com/company/world-events-network/\"},{\"label\":\"Scott Kerr\",\"href\":\"https://www.linkedin.com/in/scott-kerr-22889b3/\"},{\"label\":\"Facebook\",\"href\":\"https://www.facebook.com/worldeventsnetwork/\"}]')
+    $headingPrefix = '<span aria-hidden="true"><span><span class="page-entry-heading-word"><span class="page-entry-heading-word-hidden">World-class</span><span class="page-entry-heading-word-visible">World-class</span></span><span class="page-entry-heading-space" aria-hidden="true"> </span></span><span><span class="page-entry-heading-word"><span class="page-entry-heading-word-hidden">systems</span><span class="page-entry-heading-word-visible">systems</span></span><span class="page-entry-heading-space" aria-hidden="true"> </span></span><span><span class="page-entry-heading-word"><span class="page-entry-heading-word-hidden">built</span><span class="page-entry-heading-word-visible">built</span></span><span class="page-entry-heading-space" aria-hidden="true"> </span></span><span><span class="page-entry-heading-word"><span class="page-entry-heading-word-hidden">to</span><span class="page-entry-heading-word-visible">to</span></span><span class="page-entry-heading-space" aria-hidden="true"> </span></span><span><span class="page-entry-heading-word"><span class="page-entry-heading-word-hidden">perform</span><span class="page-entry-heading-word-visible">perform</span></span></span></span>'
+    $text = [regex]::Replace($text, 'aria-label="World-class systems built to perform"><span aria-hidden="true">.*?</span></h2>', 'aria-label="World-class systems built to perform">' + $headingPrefix + '</h2>', [Text.RegularExpressions.RegexOptions]::Singleline)
   }
   [IO.File]::WriteAllText((Resolve-Path $file), $text, [Text.UTF8Encoding]::new($false))
 }

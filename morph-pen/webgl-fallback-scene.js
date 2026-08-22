@@ -6,6 +6,7 @@ import {
 } from "./modules/scene-interactions.js";
 import { createMusicReactiveInput } from "./modules/music-reactive-input.js";
 import { getMusicReactiveDeformState } from "./modules/music-reactive-mapping.js";
+import { createFallbackCubeSplit } from "./modules/fallback-cube-split.js";
 
 const SCENE_CONFIG = {
   sceneScale: 1.02,
@@ -60,11 +61,11 @@ function createFallbackEnvironmentMap(renderer) {
   const ctx = envCanvas.getContext("2d");
 
   const gradient = ctx.createLinearGradient(0, 0, envCanvas.width, envCanvas.height);
-  gradient.addColorStop(0, "#f6f1e8");
+  gradient.addColorStop(0, "#f4f7fb");
   gradient.addColorStop(0.24, "#ffffff");
-  gradient.addColorStop(0.52, "#f92d04");
-  gradient.addColorStop(0.76, "#f6f1e8");
-  gradient.addColorStop(1, "#050505");
+  gradient.addColorStop(0.52, "#1f5eff");
+  gradient.addColorStop(0.76, "#f4f7fb");
+  gradient.addColorStop(1, "#07111f");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
 
@@ -78,15 +79,15 @@ function createFallbackEnvironmentMap(renderer) {
   ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
 
   const glowB = ctx.createRadialGradient(760, 180, 10, 760, 180, 240);
-  glowB.addColorStop(0, "rgba(249, 45, 4, 0.92)");
-  glowB.addColorStop(0.28, "rgba(249, 45, 4, 0.24)");
+  glowB.addColorStop(0, "rgba(31, 94, 255, 0.92)");
+  glowB.addColorStop(0.28, "rgba(31, 94, 255, 0.24)");
   glowB.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = glowB;
   ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
 
   const glowC = ctx.createRadialGradient(512, 300, 10, 512, 300, 260);
   glowC.addColorStop(0, "rgba(5, 5, 5, 0.22)");
-  glowC.addColorStop(0.3, "rgba(249, 45, 4, 0.12)");
+  glowC.addColorStop(0.3, "rgba(31, 94, 255, 0.12)");
   glowC.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = glowC;
   ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
@@ -632,7 +633,7 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
   const backdrop = new THREE.Mesh(
     new THREE.PlaneGeometry(28, 18),
     new THREE.MeshBasicMaterial({
-      color: new THREE.Color("#dbdbda"),
+      color: new THREE.Color("#f4f7fb"),
       depthWrite: false,
       toneMapped: false,
     }),
@@ -720,24 +721,24 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
 
   const innerMaterial = useSafeMobileMaterials
     ? new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#f92d04"),
+        color: new THREE.Color("#1f5eff"),
         roughness: 0.18,
         metalness: 0,
-        emissive: new THREE.Color("#f92d04"),
+        emissive: new THREE.Color("#1f5eff"),
         emissiveIntensity: 1.04,
       })
     : new THREE.MeshPhysicalMaterial({
-        color: new THREE.Color("#f92d04"),
+        color: new THREE.Color("#1f5eff"),
         roughness: 0.14,
         metalness: 0,
         transmission: 0,
         thickness: 0,
         ior: 1,
         reflectivity: 0.2,
-        attenuationColor: new THREE.Color("#f92d04"),
+        attenuationColor: new THREE.Color("#1f5eff"),
         attenuationDistance: 0.1,
         clearcoat: 0.06,
-        emissive: new THREE.Color("#f92d04"),
+        emissive: new THREE.Color("#1f5eff"),
         emissiveIntensity: 1.08,
       });
   innerMaterial.envMapIntensity = 0.72;
@@ -777,6 +778,7 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
   coatMesh.renderOrder = 3;
   coatMesh.scale.setScalar(useSafeMobileMaterials ? 1.006 : 1);
   world.add(shellMesh, innerMesh, coatMesh);
+  const cubeSplit = createFallbackCubeSplit({ world, material: glassMaterial });
 
   const scrollPauseState = createFallbackScrollState();
   const musicReactiveInput = createMusicReactiveInput();
@@ -828,6 +830,7 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
     const scrollProgress = scrollPauseState.getSceneScrollProgress();
     const { morphProgress, sharedBlobBumpScale, forceAllNormals } =
       getMorphRenderState(scrollProgress);
+    const splitProgress = smoothstep(0.54, 0.98, scrollProgress);
     const musicReactiveState = musicReactiveInput.getState();
     const musicReactive = getMusicReactiveDeformState({
       elapsed,
@@ -907,6 +910,9 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
         normalInterval: 3,
       });
     }
+    cubeSplit.update(splitProgress);
+    shellMesh.visible = splitProgress < 0.995;
+    coatMesh.visible = splitProgress < 0.995 && morphProgress < 0.995;
 
     autoRotationY = applySceneTransforms({
       dt,
@@ -962,6 +968,7 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
     flagTexture.dispose();
     innerMaterial.dispose();
     coatMaterial.dispose();
+    cubeSplit.dispose();
     backdrop.geometry.dispose();
     backdrop.material.dispose();
     environmentController.dispose();

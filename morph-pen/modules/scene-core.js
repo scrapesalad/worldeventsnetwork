@@ -54,11 +54,11 @@ export function createEnvironmentMap(renderer) {
   const ctx = envCanvas.getContext("2d");
 
   const gradient = ctx.createLinearGradient(0, 0, envCanvas.width, envCanvas.height);
-  gradient.addColorStop(0, "#f6f1e8");
+  gradient.addColorStop(0, "#f4f7fb");
   gradient.addColorStop(0.24, "#ffffff");
-  gradient.addColorStop(0.52, "#f92d04");
-  gradient.addColorStop(0.76, "#f6f1e8");
-  gradient.addColorStop(1, "#050505");
+  gradient.addColorStop(0.52, "#1f5eff");
+  gradient.addColorStop(0.76, "#f4f7fb");
+  gradient.addColorStop(1, "#07111f");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
 
@@ -72,15 +72,15 @@ export function createEnvironmentMap(renderer) {
   ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
 
   const glowB = ctx.createRadialGradient(760, 180, 10, 760, 180, 240);
-  glowB.addColorStop(0, "rgba(249, 45, 4, 0.92)");
-  glowB.addColorStop(0.28, "rgba(249, 45, 4, 0.24)");
+  glowB.addColorStop(0, "rgba(31, 94, 255, 0.92)");
+  glowB.addColorStop(0.28, "rgba(31, 94, 255, 0.24)");
   glowB.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = glowB;
   ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
 
   const glowC = ctx.createRadialGradient(512, 300, 10, 512, 300, 260);
   glowC.addColorStop(0, "rgba(5, 5, 5, 0.22)");
-  glowC.addColorStop(0.3, "rgba(249, 45, 4, 0.12)");
+  glowC.addColorStop(0.3, "rgba(31, 94, 255, 0.12)");
   glowC.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = glowC;
   ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);

@@ -298,7 +298,7 @@ export async function initMorphScene({ mount, canvas, status }) {
     if (showCoreVersion !== coreVersionMapVisible) {
       coreVersionMapVisible = showCoreVersion;
       innerMaterial.map = showCoreVersion ? coreSurfaceTexture : null;
-      innerMaterial.color.set(showCoreVersion ? "#ffffff" : "#f92d04");
+      innerMaterial.color.set(showCoreVersion ? "#ffffff" : "#1f5eff");
       innerMaterial.needsUpdate = true;
     }
     coatMaterial.opacity = Math.min(coatMaterial.opacity, mainCubeOpacity * oldBlobVisibility);

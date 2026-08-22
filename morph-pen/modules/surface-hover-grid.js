@@ -1,6 +1,6 @@
 import * as THREE from "/morph-pen/vendor/three/build/three.webgpu.js";
 
-const GRID_COLOR = "#dbdbda";
+const GRID_COLOR = "#f4f7fb";
 const LABEL_COLOR = "#ffffff";
 const GRID_OPACITY = 0.28;
 const LABEL_OPACITY = 0.92;

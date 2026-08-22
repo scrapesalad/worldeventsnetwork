@@ -230,12 +230,12 @@ export function createSceneLighting({ scene }) {
   keyLight.lookAt(0, 0.4, 0);
   scene.add(keyLight);
 
-  const fillLight = new THREE.RectAreaLight(0xf92d04, SCENE_CONFIG.fillIntensity, 5.4, 10.8);
+  const fillLight = new THREE.RectAreaLight(0x1f5eff, SCENE_CONFIG.fillIntensity, 5.4, 10.8);
   fillLight.position.set(5.3, -1.6, 4.8);
   fillLight.lookAt(0, -0.2, 0);
   scene.add(fillLight);
 
-  const rimLight = new THREE.RectAreaLight(0xf92d04, SCENE_CONFIG.rimIntensity, 11.2, 3.8);
+  const rimLight = new THREE.RectAreaLight(0x56a8ff, SCENE_CONFIG.rimIntensity, 11.2, 3.8);
   rimLight.position.set(0.1, 0.4, -7.2);
   rimLight.lookAt(0, 0.2, 0);
   scene.add(rimLight);
@@ -296,7 +296,7 @@ function createCoreSurfaceTexture() {
   texture.magFilter = THREE.LinearFilter;
   texture.anisotropy = 8;
 
-  context.fillStyle = "#f92d04";
+  context.fillStyle = "#1f5eff";
   context.fillRect(0, 0, canvas.width, canvas.height);
 
   const cellWidth = canvas.width / 3;
@@ -304,7 +304,7 @@ function createCoreSurfaceTexture() {
   const markCellX = 0;
   const markCellY = cellHeight;
 
-  context.fillStyle = "#dbdbda";
+  context.fillStyle = "#f4f7fb";
   context.font = "500 50px 'OONeureal-SemiMono', 'neueral', monospace";
   context.textAlign = "right";
   context.textBaseline = "bottom";
@@ -374,7 +374,7 @@ export async function createBlobMeshes({ world }) {
 
   const coreSurfaceTexture = createCoreSurfaceTexture();
   const innerMaterial = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color("#f92d04"),
+    color: new THREE.Color("#1f5eff"),
     map: null,
     roughness: 0.12 + SCENE_CONFIG.envBlur * 0.05,
     metalness: 0,
@@ -382,10 +382,10 @@ export async function createBlobMeshes({ world }) {
     thickness: 0,
     ior: 1,
     reflectivity: 0.18,
-    attenuationColor: new THREE.Color("#f92d04"),
+    attenuationColor: new THREE.Color("#1f5eff"),
     attenuationDistance: 0.1,
     clearcoat: 0.04,
-    emissive: new THREE.Color("#f92d04"),
+    emissive: new THREE.Color("#1f5eff"),
     emissiveIntensity: 1.08,
   });
 

@@ -1,5 +1,6 @@
 (() => {
   const page = document.querySelector('[data-wen-page]');
+  const path = window.location.pathname.replace(/\/$/, '') || '/';
   const organization = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -43,9 +44,29 @@
         provider: { '@type': 'Organization', name: 'World Events Network' }
       });
     }
+    const segments = path.split('/').filter(Boolean);
+    if (segments.length > 0) {
+      graph.push({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'World Events Network', item: '/' },
+          ...segments.map((segment, index) => ({
+            '@type': 'ListItem',
+            position: index + 2,
+            name: segment.split('-').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+            item: `/${segments.slice(0, index + 1).join('/')}`
+          }))
+        ]
+      });
+    }
   }
-  const script = document.createElement('script');
-  script.type = 'application/ld+json';
-  script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
-  document.head.appendChild(script);
+  window.setTimeout(() => {
+    if (document.querySelector('script[data-wen-schema]')) return;
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.dataset.wenSchema = 'true';
+    script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+    document.head.appendChild(script);
+  }, 0);
 })();
