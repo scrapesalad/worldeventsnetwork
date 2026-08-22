@@ -70,6 +70,7 @@ $replacements = [ordered]@{
   'Portrait of World Events Network' = 'Scott Kerr, Founder and Principal of World Events Network'
   '/media/me-2.webp' = '/images/scottkerr.png'
   '/public/images/scottkerr.png' = '/images/scottkerr.png'
+  '/images/scottkerr.png' = '/public/images/skottkerr/Screenshot%202026-08-22%20020758.png'
   '/APERIOS' = '/WORLD EVENTS NETWORK'
   'R/APERIOS' = 'WORLD EVENTS NETWORK'
   'Thoughtful' = 'Bold'
@@ -106,6 +107,10 @@ $replacements = [ordered]@{
   '/mock-work-images/Salt Lake City Marathon.webp' = '/mock-work-images/Dash.webp'
   "/mock-work-images/Rock 'n' Roll Salt Lake City.webp" = '/mock-work-images/Racepoint.webp'
   '/mock-work-images/Bangkok Midnight Marathon.webp' = '/mock-work-images/Commuter.webp'
+  '/mock-work-images/Commuter.webp' = '/public/images/bangkok/bangkok-midnight-marathon.jpeg'
+  '/mock-work-images/Dash.webp' = '/public/images/slcmarathon/saltlakecityhalf_ut_featured.jpg'
+  '\"src\":\"/media/side-1.webp\",\"alt\":\"Side portrait one\"},{\"src\":\"/public/images/skottkerr/Screenshot%202026-08-22%20020758.png\",\"alt\":\"Scott Kerr, Founder and Principal of World Events Network\"}' = '\"src\":\"/public/images/skottkerr/Screenshot%202026-08-22%20020758.png\",\"alt\":\"Scott Kerr, Founder and Principal of World Events Network\"},{\"src\":\"/public/images/skottkerr/scotthero.png\",\"alt\":\"Scott Kerr, Founder and Principal of World Events Network\"}'
+  'images:[{src:"/media/side-1.webp",alt:"Side portrait one"},{src:"/public/images/skottkerr/Screenshot%202026-08-22%20020758.png",alt:"Scott Kerr, Founder and Principal of World Events Network"}' = 'images:[{src:"/public/images/skottkerr/Screenshot%202026-08-22%20020758.png",alt:"Scott Kerr, Founder and Principal of World Events Network"},{src:"/public/images/skottkerr/scotthero.png",alt:"Scott Kerr, Founder and Principal of World Events Network"}'
 }
 
 foreach ($file in $files) {
@@ -122,6 +127,13 @@ foreach ($file in $files) {
   } else {
     foreach ($entry in $replacements.GetEnumerator()) {
       $text = $text.Replace($entry.Key, $entry.Value)
+    }
+    if (-not $text.Contains('/wen-structured-data.js')) {
+      $text = $text.Replace('</head>', '<script src="/wen-structured-data.js" defer></script></head>')
+    }
+    if (-not $text.Contains('property="og:title"')) {
+      $og = '<meta property="og:title" content="World Events Network | Sports & Mass Participation Event Experts"/><meta property="og:description" content="World Events Network provides event strategy, marathon and race management, participant growth, event operations and elite-athlete expertise."/><meta property="og:type" content="website"/><meta property="og:site_name" content="World Events Network"/>'
+      $text = $text.Replace('</head>', $og + '</head>')
     }
   }
   [IO.File]::WriteAllText((Resolve-Path $file), $text, [Text.UTF8Encoding]::new($false))

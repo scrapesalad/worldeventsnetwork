@@ -15,8 +15,15 @@
   "person": {
     "name": "Scott Kerr",
     "title": "Event Strategist. Race Director. Producer.",
-    "image": "/images/scottkerr.png",
-    "linkedin": "https://www.linkedin.com/in/scott-kerr-22889b3/"
+    "image": "/public/images/skottkerr/Screenshot%202026-08-22%20020758.png",
+    "linkedin": "https://www.linkedin.com/in/scott-kerr-22889b3/",
+    "gallery": [
+      "/public/images/skottkerr/scott1.png",
+      "/public/images/skottkerr/scott3.png",
+      "/public/images/skottkerr/Screenshot%202026-08-22%20020709.png",
+      "/public/images/skottkerr/Screenshot%202026-08-22%20021539.png",
+      "/public/images/skottkerr/Screenshot%202026-08-22%20020758.png"
+    ]
   },
   "navigation": [
     { "label": "About", "href": "/about" },
@@ -52,14 +59,54 @@
     }
   ],
   "services": [
-    { "title": "Mass Participation Event Development", "slug": "mass-participation-event-development" },
-    { "title": "Marathon & Race Management", "slug": "marathon-race-management" },
-    { "title": "Event Strategy & Feasibility", "slug": "event-strategy-feasibility" },
-    { "title": "Event Marketing & Participant Growth", "slug": "event-marketing-participant-growth" },
-    { "title": "Elite Athlete Recruitment", "slug": "elite-athlete-recruitment" },
-    { "title": "Event Operations", "slug": "event-operations" },
-    { "title": "Sponsorship & Brand Activation", "slug": "sponsorship-brand-activation" },
-    { "title": "Live Event Production", "slug": "live-event-production" }
+    {
+      "title": "Mass Participation Event Development",
+      "slug": "mass-participation-event-development",
+      "intro": "World Events Network helps turn ambitious event concepts into viable mass-participation properties built around market demand, participant experience and disciplined execution.",
+      "capabilities": ["Concept development", "Event positioning", "Format selection", "Destination strategy", "Course considerations", "Participation modeling", "Operating strategy", "Launch planning"]
+    },
+    {
+      "title": "Marathon & Race Management",
+      "slug": "marathon-race-management",
+      "intro": "Experienced race leadership from early planning and agency coordination through start-line operations, course management and the final finisher.",
+      "capabilities": ["Race direction", "Operational planning", "Course planning", "Permits", "Traffic coordination", "Start/finish operations", "Aid stations", "Volunteer systems", "Vendor coordination", "Contingency planning"]
+    },
+    {
+      "title": "Event Strategy & Feasibility",
+      "slug": "event-strategy-feasibility",
+      "intro": "Before committing significant resources to an event, understand the market, model, operating requirements and risks.",
+      "capabilities": ["Market assessment", "Competition", "Event positioning", "Participation assumptions", "Revenue assumptions", "Cost considerations", "Scheduling", "Risk assessment", "Go/no-go strategy"]
+    },
+    {
+      "title": "Event Marketing & Participant Growth",
+      "slug": "event-marketing-participant-growth",
+      "intro": "Sustainable event growth requires more than advertising. WEN evaluates the complete participant journey from positioning and pricing through registration and retention.",
+      "capabilities": ["Participant acquisition", "Positioning", "Pricing strategy", "Registration funnels", "Email strategy", "Digital campaigns", "Partnerships", "Ambassador programs", "Tourism marketing", "Conversion analysis"]
+    },
+    {
+      "title": "Elite Athlete Recruitment",
+      "slug": "elite-athlete-recruitment",
+      "intro": "Building a compelling professional field requires athlete relationships, competition strategy, logistics and detailed coordination.",
+      "capabilities": ["Athlete identification", "Recruiting", "Communications", "Negotiations", "Travel coordination", "Hospitality", "Professional field development", "Athlete operations"]
+    },
+    {
+      "title": "Event Operations",
+      "slug": "event-operations",
+      "intro": "Thousands of individual decisions determine what participants experience on event day. WEN builds operational systems designed to make those decisions work together.",
+      "capabilities": ["Master operations planning", "Agency coordination", "Course operations", "Start/finish operations", "Transportation", "Medical coordination", "Volunteers", "Communications", "Vendors", "Command structure", "Contingency planning"]
+    },
+    {
+      "title": "Sponsorship & Brand Activation",
+      "slug": "sponsorship-brand-activation",
+      "intro": "Build event partnerships around meaningful participant experiences and clearly defined sponsor value.",
+      "capabilities": ["Sponsorship inventory", "Package strategy", "Naming opportunities", "Physical activation", "Participant engagement", "Digital integration", "Hospitality", "Measurement strategy"]
+    },
+    {
+      "title": "Live Event Production",
+      "slug": "live-event-production",
+      "intro": "From sporting environments to live entertainment, World Events Network brings disciplined planning and audience-focused production to complex experiences.",
+      "capabilities": ["Event planning", "Production coordination", "Site operations", "Live entertainment", "Vendors", "Logistics", "Experiential design", "Audience flow", "Event-day management"]
+    }
   ],
   "work": [
     {
@@ -68,7 +115,7 @@
       "slug": "salt-lake-city-marathon",
       "category": "Mass Participation Event Management",
       "summary": "Large-scale race direction, event operations and participant experience for one of Utah's signature running events.",
-      "media": "/mock-work-images/Dash.webp",
+      "media": "/public/images/slcmarathon/saltlakecityhalf_ut_featured.jpg",
       "verificationRequired": true
     },
     {
@@ -77,7 +124,12 @@
       "slug": "rock-n-roll-salt-lake-city",
       "category": "Race Direction & Operations",
       "summary": "Race leadership and operational expertise supporting the arrival of the Rock 'n' Roll Running Series in Salt Lake City.",
-      "media": "/mock-work-images/Racepoint.webp",
+      "media": "/images/rocknrollseries/Screenshot%202026-08-22%20020304.webp",
+      "video": "/assets/Clips/rocknrollseries2.mp4",
+      "gallery": [
+        "/images/rocknrollseries/Screenshot%202026-08-22%20020238.webp",
+        "/images/rocknrollseries/Screenshot%202026-08-22%20020427.webp"
+      ],
       "verificationRequired": true
     },
     {
@@ -86,7 +138,7 @@
       "slug": "bangkok-midnight-marathon",
       "category": "International Event Consulting",
       "summary": "Event expertise supporting a major international running experience in one of Southeast Asia's most dynamic cities.",
-      "media": "/mock-work-images/Commuter.webp",
+      "media": "/public/images/bangkok/bangkok-midnight-marathon.jpeg",
       "verificationRequired": true
     },
     {

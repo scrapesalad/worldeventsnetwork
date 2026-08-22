@@ -660,10 +660,35 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
   const blobGeometry = blobBaseGeometry.clone();
   const innerGeometry = innerBaseGeometry.clone();
   const coatGeometry = blobBaseGeometry.clone();
+  const textureLoader = new THREE.TextureLoader();
+  const sourceFlagTexture = await textureLoader.loadAsync("/american-flag.avif");
+  const runnerTexture = await textureLoader.loadAsync("/favicon-32x32.png");
+  const flagCanvas = document.createElement("canvas");
+  flagCanvas.width = sourceFlagTexture.image.width;
+  flagCanvas.height = sourceFlagTexture.image.height;
+  const flagContext = flagCanvas.getContext("2d");
+  flagContext.drawImage(sourceFlagTexture.image, 0, 0, flagCanvas.width, flagCanvas.height);
+  const runnerSize = Math.max(48, Math.round(flagCanvas.height * 0.16));
+  const runnerY = Math.round(flagCanvas.height * 0.72);
+  const crowdCount = 9;
+  flagContext.globalAlpha = 0.62;
+  for (let index = 0; index < crowdCount; index += 1) {
+    const x = Math.round((flagCanvas.width - runnerSize) * (index / (crowdCount - 1)));
+    const y = runnerY + Math.round(Math.sin(index * 1.7) * flagCanvas.height * 0.025);
+    flagContext.drawImage(runnerTexture.image, x, y, runnerSize, runnerSize);
+  }
+  flagContext.globalAlpha = 1;
+  const flagTexture = new THREE.CanvasTexture(flagCanvas);
+  flagTexture.colorSpace = THREE.SRGBColorSpace;
+  flagTexture.anisotropy = 8;
+  flagTexture.needsUpdate = true;
+  sourceFlagTexture.dispose();
+  runnerTexture.dispose();
 
   const glassMaterial = useSafeMobileMaterials
     ? new THREE.MeshStandardMaterial({
         color: new THREE.Color("#ffffff"),
+        map: flagTexture,
         roughness: 0.07,
         metalness: 0,
         transparent: true,
@@ -673,12 +698,13 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
       })
     : new THREE.MeshPhysicalMaterial({
         color: new THREE.Color("#ffffff"),
-        roughness: 0.12,
+        map: flagTexture,
+        roughness: 0.34,
         metalness: 0,
-        transmission: 0.86,
-        thickness: 0.72,
-        ior: 1.008,
-        reflectivity: 1,
+        transmission: 0.08,
+        thickness: 0.12,
+        ior: 1.08,
+        reflectivity: 0.45,
         attenuationColor: new THREE.Color("#ffffff"),
         attenuationDistance: 48,
         clearcoat: 1,
@@ -842,6 +868,7 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
       reactiveFlowSpeed: THREE.MathUtils.lerp(1, musicReactive.flowSpeed, 0.35),
       reactiveRippleShift: musicReactive.rippleShift * 0.26,
       reactiveCenterRoundness: 0.62,
+      flagWaveAmount: THREE.MathUtils.lerp(0, 0.25, morphProgress),
       forceNormals: !useSafeMobileMaterials && forceAllNormals,
       normalInterval: qualityProfile.shellNormalInterval,
     });
@@ -875,6 +902,7 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
         reactiveFlowSpeed: musicReactive.flowSpeed,
         reactiveRippleShift: musicReactive.rippleShift * 0.72,
         reactiveCenterRoundness: musicReactive.centerRoundness * 0.82,
+        flagWaveAmount: THREE.MathUtils.lerp(0, 0.12, morphProgress),
         forceNormals: forceAllNormals,
         normalInterval: 3,
       });
@@ -931,6 +959,7 @@ export async function initWebGLFallbackScene({ mount, canvas, status }) {
     innerGeometry.dispose();
     coatGeometry.dispose();
     glassMaterial.dispose();
+    flagTexture.dispose();
     innerMaterial.dispose();
     coatMaterial.dispose();
     backdrop.geometry.dispose();

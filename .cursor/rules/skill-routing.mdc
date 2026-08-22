@@ -1,0 +1,19 @@
+---
+description: Route every task through the installed Codex skills when relevant
+alwaysApply: true
+---
+
+# Skill Routing
+
+At the start of every task, inspect the installed skills and select all that materially apply. Use the relevant skill instructions before acting, including their required verification steps.
+
+- Use `frontend-developer` for frontend, HTML, CSS, JavaScript, responsive, accessibility, performance, or UI work.
+- Use `research` when current facts, external documentation, or technical investigation are needed.
+- Use `prototype` for throwaway UI or behavior experiments.
+- Use `codebase-design` and `domain-modeling` for architecture, interfaces, terminology, or data-model decisions.
+- Use `implement` for work driven by a spec or tickets; use `tdd` when tests or test-first development are appropriate.
+- Use `diagnosing-bugs` for failures, regressions, errors, or slow behavior.
+- Use `code-review` or the appropriate review skill when reviewing changes.
+- Use `grill-with-docs`, `to-spec`, `to-tickets`, `triage`, or `wayfinder` when the task requires discovery, specification, issue breakdown, triage, or multi-session planning.
+
+Do not invoke unrelated skills merely to satisfy this rule. Announce selected skills briefly, read their instructions fully, and preserve the user's requested scope and existing work.

@@ -47,7 +47,7 @@ function createSplitCubeTargets() {
           (seededRandom(index + 103) - 0.5) * Math.PI * 2.6,
         );
 
-        targets.push({ start, end, rotation });
+        targets.push({ start, end, rotation, gridX: x, gridY: y, gridZ: z });
       }
     }
   }
@@ -55,19 +55,31 @@ function createSplitCubeTargets() {
   return targets;
 }
 
-function createSplitMesh({ geometry, material, renderOrder }) {
+function createSplitMesh({ geometry, material, renderOrder, targets }) {
   const splitMaterial = material.clone();
   splitMaterial.transparent = true;
   splitMaterial.opacity = 0;
   splitMaterial.depthWrite = false;
 
-  const mesh = new THREE.InstancedMesh(geometry, splitMaterial, SPLIT_CUBE_COUNT);
-  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  mesh.visible = false;
-  mesh.renderOrder = renderOrder;
+  const meshes = [];
+  const baseUv = geometry.attributes.uv.array.slice();
+  for (let index = 0; index < SPLIT_CUBE_COUNT; index += 1) {
+    const fragmentGeometry = geometry.clone();
+    const target = targets[index];
+    const uv = fragmentGeometry.attributes.uv.array;
+    for (let uvIndex = 0; uvIndex < uv.length; uvIndex += 2) {
+      uv[uvIndex] = (target.gridX + baseUv[uvIndex]) / SPLIT_GRID_SIZE;
+      uv[uvIndex + 1] = (target.gridY + baseUv[uvIndex + 1]) / SPLIT_GRID_SIZE;
+    }
+    fragmentGeometry.attributes.uv.needsUpdate = true;
+    const mesh = new THREE.Mesh(fragmentGeometry, splitMaterial);
+    mesh.visible = false;
+    mesh.renderOrder = renderOrder;
+    meshes.push(mesh);
+  }
 
   return {
-    mesh,
+    meshes,
     material: splitMaterial,
   };
 }
@@ -75,16 +87,22 @@ function createSplitMesh({ geometry, material, renderOrder }) {
 export function createCubeSplit({ world, glassMaterial }) {
   const geometry = new THREE.BoxGeometry(SPLIT_CUBE_SIZE, SPLIT_CUBE_SIZE, SPLIT_CUBE_SIZE);
 
-  const shellSplit = createSplitMesh({ geometry, material: glassMaterial, renderOrder: 5 });
-  shellSplit.material.opacity = 0;
-  world.add(shellSplit.mesh);
-
   const targets = createSplitCubeTargets();
+  const shellSplit = createSplitMesh({
+    geometry,
+    material: glassMaterial,
+    renderOrder: 5,
+    targets,
+  });
+  shellSplit.material.opacity = 0;
+  world.add(...shellSplit.meshes);
   const dummy = new THREE.Object3D();
 
   function update(splitProgress) {
     const isVisible = splitProgress > 0.001;
-    shellSplit.mesh.visible = isVisible;
+    shellSplit.meshes.forEach((mesh) => {
+      mesh.visible = isVisible;
+    });
     shellSplit.material.opacity = isVisible ? 0.92 : 0;
 
     if (!isVisible) {
@@ -103,22 +121,26 @@ export function createCubeSplit({ world, glassMaterial }) {
       );
       dummy.scale.setScalar(THREE.MathUtils.lerp(1, 0.72, localProgress));
       dummy.updateMatrix();
-      shellSplit.mesh.setMatrixAt(index, dummy.matrix);
+      shellSplit.meshes[index].position.copy(dummy.position);
+      shellSplit.meshes[index].rotation.copy(dummy.rotation);
+      shellSplit.meshes[index].scale.copy(dummy.scale);
     }
 
-    shellSplit.mesh.instanceMatrix.needsUpdate = true;
     return splitProgress;
   }
 
   update(0);
 
   return {
-    shellMesh: shellSplit.mesh,
+    shellMesh: shellSplit.meshes,
     shellMaterial: shellSplit.material,
     geometry,
     update,
     dispose() {
-      world.remove(shellSplit.mesh);
+      shellSplit.meshes.forEach((mesh) => {
+        world.remove(mesh);
+        mesh.geometry.dispose();
+      });
       geometry.dispose();
       shellSplit.material.dispose();
     },

@@ -9,6 +9,8 @@ export function disposeMorphScene({
   innerMaterial,
   coatMaterial,
   cubeSplit,
+  crowdSilhouettes,
+  clothFlag,
   backdrop,
   floor,
   generatedEnvironment,
@@ -28,6 +30,9 @@ export function disposeMorphScene({
   innerGeometry.dispose();
   coatGeometry.dispose();
   cubeSplit?.dispose();
+  crowdSilhouettes?.dispose();
+  clothFlag?.dispose();
+  glassMaterial.map?.dispose();
   glassMaterial.dispose();
   innerMaterial.map?.dispose();
   innerMaterial.dispose();

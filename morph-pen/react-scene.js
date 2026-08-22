@@ -112,10 +112,12 @@ export async function initMorphScene({ mount, canvas, status }) {
     innerMaterial,
     coatMaterial,
     coreSurfaceTexture,
+    crowdSilhouettes,
+    clothFlag,
     shellMesh,
     innerMesh,
     coatMesh,
-  } = createBlobMeshes({ world });
+  } = await createBlobMeshes({ world });
   const cubeSplit = createCubeSplit({ world, glassMaterial });
   const { vertexCount, baseDirections } = createBlobGeometryState(blobBaseGeometry);
   const anchorDefinitions = createBlobAnchorDefinitions();
@@ -176,6 +178,8 @@ export async function initMorphScene({ mount, canvas, status }) {
       elapsed,
       musicReactiveState,
     });
+    crowdSilhouettes.update(morphProgress, elapsed, scrollProgress);
+    clothFlag.update(morphProgress, elapsed, scrollProgress);
     const impactEase = musicReactive.impact > easedMusicImpact ? 0.34 : 0.075;
     easedMusicImpact = THREE.MathUtils.lerp(
       easedMusicImpact,
@@ -243,6 +247,7 @@ export async function initMorphScene({ mount, canvas, status }) {
       reactiveFlowSpeed: THREE.MathUtils.lerp(1, easedMusicReactive.flowSpeed, 0.42),
       reactiveRippleShift: easedMusicReactive.rippleShift * 0.36,
       reactiveCenterRoundness: shellCenterRoundness,
+      flagWaveAmount: THREE.MathUtils.lerp(0, 0.25, morphProgress),
       forceNormals: forceAllNormals,
       normalInterval: NORMAL_UPDATE_INTERVALS.shell,
     });
@@ -274,17 +279,19 @@ export async function initMorphScene({ mount, canvas, status }) {
       reactivePointerBoost: easedMusicReactive.pointerBoost * 0.4,
       reactiveFlowPhase: easedMusicReactive.flowPhase * 0.9,
       reactiveFlowSpeed: easedMusicReactive.flowSpeed,
-      reactiveRippleShift: easedMusicReactive.rippleShift * 1.2,
-      reactiveCenterRoundness: easedMusicReactive.centerRoundness * 0.82,
-      forceNormals: forceAllNormals,
+        reactiveRippleShift: easedMusicReactive.rippleShift * 1.2,
+        reactiveCenterRoundness: easedMusicReactive.centerRoundness * 0.82,
+        flagWaveAmount: THREE.MathUtils.lerp(0, 0.12, morphProgress),
+        forceNormals: forceAllNormals,
       normalInterval: NORMAL_UPDATE_INTERVALS.coat,
     });
     const cubeSplitProgress = cubeSplit.update(splitProgress);
     const mainCubeOpacity = 1 - smoothstep(0, 0.35, splitProgress);
+    const oldBlobVisibility = THREE.MathUtils.smoothstep(morphProgress, 0.48, 0.78);
     shellMesh.visible = cubeSplitProgress < 0.995;
-    innerMesh.visible = true;
-    coatMesh.visible = cubeSplitProgress < 0.995;
-    glassMaterial.opacity = mainCubeOpacity;
+    innerMesh.visible = oldBlobVisibility > 0.01;
+    coatMesh.visible = cubeSplitProgress < 0.995 && oldBlobVisibility > 0.01;
+    glassMaterial.opacity = mainCubeOpacity * oldBlobVisibility;
     innerMaterial.transparent = true;
     innerMaterial.opacity = 1;
     const showCoreVersion = morphProgress > 0.965;
@@ -294,7 +301,7 @@ export async function initMorphScene({ mount, canvas, status }) {
       innerMaterial.color.set(showCoreVersion ? "#ffffff" : "#f92d04");
       innerMaterial.needsUpdate = true;
     }
-    coatMaterial.opacity = Math.min(coatMaterial.opacity, mainCubeOpacity);
+    coatMaterial.opacity = Math.min(coatMaterial.opacity, mainCubeOpacity * oldBlobVisibility);
 
     autoRotationY = applySceneTransforms({
       dt,
@@ -367,6 +374,8 @@ export async function initMorphScene({ mount, canvas, status }) {
       innerMaterial,
       coatMaterial,
       cubeSplit,
+      crowdSilhouettes,
+      clothFlag,
       backdrop,
       floor,
       generatedEnvironment,

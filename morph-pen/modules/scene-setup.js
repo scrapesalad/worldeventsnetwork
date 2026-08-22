@@ -1,6 +1,6 @@
 import * as THREE from "/morph-pen/vendor/three/build/three.webgpu.js";
 import { RectAreaLightTexturesLib } from "/morph-pen/vendor/three/examples/jsm/lights/RectAreaLightTexturesLib.js";
-import { SCENE_CONFIG } from "./scene-core.js";
+import { SCENE_CONFIG, smoothstep } from "./scene-core.js";
 
 export function initializeRectAreaLightTextures() {
   const rectAreaLTC = RectAreaLightTexturesLib.init();
@@ -14,6 +14,124 @@ function configureRenderer(renderer, pixelRatioCap) {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = SCENE_CONFIG.exposure;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+}
+
+async function loadFlagTexture() {
+  const texture = await new THREE.TextureLoader().loadAsync("/american-flag.avif");
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 8;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+async function createCrowdSilhouettes({ world }) {
+  const sourceRunnerTexture = await new THREE.TextureLoader().loadAsync("/favicon-32x32.png");
+  const runnerCanvas = document.createElement("canvas");
+  runnerCanvas.width = sourceRunnerTexture.image.width;
+  runnerCanvas.height = sourceRunnerTexture.image.height;
+  const runnerContext = runnerCanvas.getContext("2d");
+  runnerContext.drawImage(sourceRunnerTexture.image, 0, 0);
+  const runnerPixels = runnerContext.getImageData(0, 0, runnerCanvas.width, runnerCanvas.height);
+  for (let index = 0; index < runnerPixels.data.length; index += 4) {
+    const brightness = runnerPixels.data[index] + runnerPixels.data[index + 1] + runnerPixels.data[index + 2];
+    if (brightness < 120) {
+      runnerPixels.data[index + 3] = 0;
+    } else {
+      runnerPixels.data[index] = 7;
+      runnerPixels.data[index + 1] = 27;
+      runnerPixels.data[index + 2] = 69;
+      runnerPixels.data[index + 3] = 255;
+    }
+  }
+  runnerContext.putImageData(runnerPixels, 0, 0);
+  const runnerTexture = new THREE.CanvasTexture(runnerCanvas);
+  runnerTexture.colorSpace = THREE.SRGBColorSpace;
+  const material = new THREE.SpriteMaterial({
+    map: runnerTexture,
+    color: new THREE.Color("#071b45"),
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+    depthTest: false,
+  });
+  const sprites = [];
+  const crowdCount = 7;
+  for (let index = 0; index < crowdCount; index += 1) {
+    const sprite = new THREE.Sprite(material);
+    sprite.scale.set(0.46, 0.46, 1);
+    sprite.position.set(-2.75 + index * 0.92, -1.12, 1.7);
+    sprite.renderOrder = 4;
+    world.add(sprite);
+    sprites.push(sprite);
+  }
+
+  return {
+    update(morphProgress, time, scrollProgress = 0) {
+      const visibility = 1 - smoothstep(0.24, 0.7, morphProgress);
+      material.opacity = visibility * 0.82;
+      sprites.forEach((sprite, index) => {
+        const phase = index * 0.62;
+        const runPhase = scrollProgress * Math.PI * 18 + phase;
+        const stride = Math.sin(runPhase);
+        const bounce = Math.abs(Math.sin(runPhase));
+        sprite.position.x = -2.75 + index * 0.92 + stride * 0.07 * visibility;
+        sprite.position.y = -1.12 + bounce * 0.08 * visibility + Math.sin(time * 0.8 + phase) * 0.03;
+        sprite.position.z = 1.7 + Math.cos(runPhase) * 0.04;
+        sprite.rotation.z = stride * 0.12 * visibility;
+        sprite.scale.y = 0.46 * (1 + bounce * 0.08 * visibility);
+      });
+    },
+    dispose() {
+      sprites.forEach((sprite) => world.remove(sprite));
+      material.dispose();
+      runnerTexture.dispose();
+      sourceRunnerTexture.dispose();
+    },
+  };
+}
+
+function createClothFlag({ world, flagTexture }) {
+  const geometry = new THREE.PlaneGeometry(5.6, 2.9, 112, 56);
+  const basePositions = geometry.attributes.position.array.slice();
+  const material = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color("#ffffff"),
+    map: flagTexture,
+    roughness: 0.42,
+    metalness: 0,
+    transmission: 0.02,
+    transparent: true,
+    opacity: 0,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.position.set(0, 0.08, 0.72);
+  mesh.renderOrder = 3;
+  world.add(mesh);
+
+  return {
+    update(morphProgress, time, scrollProgress = 0) {
+      const visibility = 1 - smoothstep(0.48, 0.82, morphProgress);
+      material.opacity = visibility;
+      const positions = geometry.attributes.position.array;
+      const waveStrength = 0.2 * visibility;
+      for (let index = 0; index < positions.length; index += 3) {
+        const x = basePositions[index];
+        const y = basePositions[index + 1];
+        const phase = x * 1.65 + y * 0.5 + time * 1.65 + scrollProgress * 12;
+        positions[index] = x;
+        positions[index + 1] = y + Math.sin(phase * 0.72) * waveStrength * 0.08;
+        positions[index + 2] = basePositions[index + 2] + Math.sin(phase) * waveStrength;
+      }
+      geometry.attributes.position.needsUpdate = true;
+      geometry.computeVertexNormals();
+    },
+    dispose() {
+      world.remove(mesh);
+      geometry.dispose();
+      material.dispose();
+    },
+  };
 }
 
 export async function createRenderer({ canvas, onRecoveryAttempt }) {
@@ -213,15 +331,19 @@ function applyCoreFaceAtlasUvs(geometry) {
   geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
 }
 
-export function createBlobMeshes({ world }) {
+export async function createBlobMeshes({ world }) {
+  const flagTexture = await loadFlagTexture();
+  const crowdSilhouettes = await createCrowdSilhouettes({ world });
+  const clothFlag = createClothFlag({ world, flagTexture });
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color("#ffffff"),
-    roughness: Math.min(SCENE_CONFIG.roughness * 0.18 + SCENE_CONFIG.envBlur * 0.08, 1),
+    map: flagTexture,
+    roughness: 0.34,
     metalness: 0,
-    transmission: SCENE_CONFIG.transmission,
-    thickness: Math.max(SCENE_CONFIG.thickness * 0.12, 0.25),
-    ior: 1.0 + (SCENE_CONFIG.ior - 1.0) * 0.08,
-    reflectivity: SCENE_CONFIG.reflectivity,
+    transmission: 0.08,
+    thickness: 0.12,
+    ior: 1.08,
+    reflectivity: 0.45,
     attenuationColor: new THREE.Color("#ffffff"),
     attenuationDistance: Math.max(SCENE_CONFIG.attenuationDistance * 20, 40),
     clearcoat: SCENE_CONFIG.clearcoat,
@@ -287,6 +409,9 @@ export function createBlobMeshes({ world }) {
     innerGeometry,
     coatGeometry,
     glassMaterial,
+    flagTexture,
+    crowdSilhouettes,
+    clothFlag,
     innerMaterial,
     coreSurfaceTexture,
     coatMaterial,

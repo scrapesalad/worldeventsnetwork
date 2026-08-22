@@ -1,0 +1,5 @@
+# Keep the original high-resolution source media out of the deployable commit.
+/public/images/rocknrollseries/
+/public/videos/rocknrollseries/
+/assets/Clips/image-text.mp4
+/assets/Clips/rocknrollseries2.mp4
