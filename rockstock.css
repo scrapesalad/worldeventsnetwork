@@ -1,0 +1,14 @@
+.wen-feature-media {
+  width: 100%;
+  max-width: none;
+  aspect-ratio: 16 / 7;
+  object-fit: contain;
+  background: var(--black);
+  filter: none;
+}
+
+@media (max-width: 700px) {
+  .wen-feature-media {
+    aspect-ratio: 16 / 9;
+  }
+}
