@@ -55,22 +55,11 @@ async function createCrowdSilhouettes({ world }) {
     depthTest: false,
   });
   const sprites = [];
-  const runnerAnchors = [
-    [-3.05, -0.92],
-    [-3.05, -0.05],
-    [-3.05, 0.82],
-    [-1.8, -1.62],
-    [-0.6, -1.68],
-    [0.6, -1.68],
-    [1.8, -1.62],
-    [3.05, -0.92],
-    [3.05, -0.05],
-    [3.05, 0.82],
-  ];
-  for (let index = 0; index < runnerAnchors.length; index += 1) {
+  const crowdCount = 7;
+  for (let index = 0; index < crowdCount; index += 1) {
     const sprite = new THREE.Sprite(material);
-    sprite.scale.set(0.4, 0.4, 1);
-    sprite.position.set(runnerAnchors[index][0], runnerAnchors[index][1], 1.7);
+    sprite.scale.set(0.46, 0.46, 1);
+    sprite.position.set(-2.75 + index * 0.92, -1.12, 1.7);
     sprite.renderOrder = 4;
     world.add(sprite);
     sprites.push(sprite);
@@ -81,18 +70,15 @@ async function createCrowdSilhouettes({ world }) {
       const visibility = 1 - smoothstep(0.24, 0.7, morphProgress);
       material.opacity = visibility * 0.82;
       sprites.forEach((sprite, index) => {
-        const phase = index * 0.58;
-        const anchor = runnerAnchors[index];
-        const runPhase = scrollProgress * Math.PI * 36 + time * 1.5 + phase;
+        const phase = index * 0.62;
+        const runPhase = scrollProgress * Math.PI * 18 + phase;
         const stride = Math.sin(runPhase);
         const bounce = Math.abs(Math.sin(runPhase));
-        const sideMotion = Math.abs(anchor[0]) > 2.5 ? stride * 0.1 : stride * 0.06;
-        sprite.position.x = anchor[0] + sideMotion * visibility;
-        sprite.position.y = anchor[1] + bounce * 0.15 * visibility;
-        sprite.position.z = 1.7 + Math.cos(runPhase) * 0.08;
-        sprite.rotation.z = stride * 0.2 * visibility;
-        sprite.scale.x = 0.4 * (1 + stride * 0.08 * visibility);
-        sprite.scale.y = 0.4 * (1 + bounce * 0.16 * visibility);
+        sprite.position.x = -2.75 + index * 0.92 + stride * 0.07 * visibility;
+        sprite.position.y = -1.12 + bounce * 0.08 * visibility + Math.sin(time * 0.8 + phase) * 0.03;
+        sprite.position.z = 1.7 + Math.cos(runPhase) * 0.04;
+        sprite.rotation.z = stride * 0.12 * visibility;
+        sprite.scale.y = 0.46 * (1 + bounce * 0.08 * visibility);
       });
     },
     dispose() {
@@ -128,14 +114,14 @@ function createClothFlag({ world, flagTexture }) {
       const visibility = 1 - smoothstep(0.48, 0.82, morphProgress);
       material.opacity = visibility;
       const positions = geometry.attributes.position.array;
-      const waveStrength = 0.48 * visibility;
+      const waveStrength = 0.2 * visibility;
       for (let index = 0; index < positions.length; index += 3) {
         const x = basePositions[index];
         const y = basePositions[index + 1];
-        const phase = x * 1.55 + y * 0.9 + time * 2.2 + scrollProgress * 18;
+        const phase = x * 1.65 + y * 0.5 + time * 1.65 + scrollProgress * 12;
         positions[index] = x;
-        positions[index + 1] = y + Math.sin(phase * 0.72) * waveStrength * 0.2;
-        positions[index + 2] = basePositions[index + 2] + Math.sin(phase) * waveStrength + Math.sin(phase * 2.1) * 0.08;
+        positions[index + 1] = y + Math.sin(phase * 0.72) * waveStrength * 0.08;
+        positions[index + 2] = basePositions[index + 2] + Math.sin(phase) * waveStrength;
       }
       geometry.attributes.position.needsUpdate = true;
       geometry.computeVertexNormals();
