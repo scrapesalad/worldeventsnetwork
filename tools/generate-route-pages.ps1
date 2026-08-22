@@ -45,15 +45,28 @@ $rockGallery = ($rockPhotoNames | ForEach-Object {
 }) -join ''
 $rockVideo = "<div class='wen-media-video'><video controls playsinline preload='metadata' aria-label='Rock &#39;n&#39; Roll Salt Lake City course tour'><source src='/assets/Clips/rocknrollseries2.mp4' type='video/mp4'>Your browser does not support the video element.</video><p class='wen-media-video-caption'>Rock &#39;n&#39; Roll Salt Lake City course tour</p></div>"
 $serviceCards = ($content.services | ForEach-Object { "<a href='/expertise/$($_.slug)'><span class='wen-card-title'>$(E $_.title)</span><span class='wen-card-meta'>Discuss this discipline</span></a>" }) -join ''
+$expertiseImages = @(
+  '/public/images/wonderwoman/images.jpg',
+  '/public/images/slcmarathon/saltlakecityhalf_ut_featured.jpg',
+  '/public/images/bangkok/bangkok-midnight-marathon.jpeg',
+  '/images/rocknrollseries/Screenshot%202026-08-22%20020304.webp',
+  '/public/images/wonderwoman/images%20(2).jpg',
+  '/images/rocknrollseries/Screenshot%202026-08-22%20020838.webp',
+  '/public/images/rockstock/rockstockcover.png',
+  '/public/images/wonderwoman/images%20(1).jpg'
+)
+$expertiseImageAlt = 'Mass-participation sporting event in motion'
 
 Write-Route '/about' (Page 'The Experience Behind the Experience.' 'World Events Network' 'World Events Network is an event consulting and management organization focused on developing, growing and delivering mass-participation sporting events and live experiences.' "<section class='wen-grid'><div class='wen-section'><h2>Senior expertise.</h2><p>The WEN model combines senior event leadership with a network of specialized professionals, partners and vendors assembled around the needs of each project.</p></div><div class='wen-section'><h2>Scott Kerr</h2><p>Event Strategist. Race Director. Producer.</p></div></section>" 'Discuss an Event')
 $scottGallery = ($content.person.gallery | ForEach-Object { "<figure class='wen-gallery-item'><img loading='lazy' src='$($_)' alt='Scott Kerr, Founder and Principal of World Events Network'><figcaption>Scott Kerr</figcaption></figure>" }) -join ''
 Write-Route '/scott-kerr' (Page 'Scott Kerr' 'World Events Network' 'Scott Kerr is the founder and principal behind World Events Network, bringing senior event leadership across mass-participation sports, event management, athlete recruitment, marketing and live production.' "<img class='wen-media' src='$($content.person.image)' alt='Scott Kerr, Founder and Principal of World Events Network'><div class='wen-media-gallery' aria-label='Scott Kerr portraits'>$scottGallery</div><section class='wen-grid'><div class='wen-section'><h2>Experience</h2><p>Event strategist, race director and producer.</p></div><div class='wen-section'><h2>World Events Network</h2><p>Senior expertise. The right team for the event.</p></div></section>" 'Start the Conversation')
-Write-Route '/expertise' (Page 'Events Built to Perform.' 'World Events Network' 'World Events Network combines strategy, development, marketing and operations to help organizations launch, grow and deliver ambitious sporting and live events.' "<div class='wen-list'>$serviceCards</div>" 'Discuss an Event')
+Write-Route '/expertise' (Page 'Events Built to Perform.' 'World Events Network' 'World Events Network combines strategy, development, marketing and operations to help organizations launch, grow and deliver ambitious sporting and live events.' "<img class='wen-media wen-expertise-media' src='$($expertiseImages[0])' alt='Wonder Woman Run Series participants at race day' width='2468' height='1296'><div class='wen-list'>$serviceCards</div>" 'Discuss an Event')
 
-foreach ($service in $content.services) {
+for ($serviceIndex = 0; $serviceIndex -lt $content.services.Count; $serviceIndex++) {
+  $service = $content.services[$serviceIndex]
   $capabilityList = ($service.capabilities | ForEach-Object { "<li>$(E $_)</li>" }) -join ''
-  $body = "<section class='wen-grid'><div class='wen-section'><h2>The assignment</h2><p>Clarify the event objective, operating model and decisions required to move forward.</p></div><div class='wen-section'><h2>Capabilities</h2><ul>$capabilityList</ul></div><div class='wen-section'><h2>Approach</h2><p>WEN brings senior event leadership, practical planning and specialized support around the needs of the assignment.</p></div><div class='wen-section'><h2>Related experience</h2><p><a href='/work'>View selected work in motion.</a></p></div></section>"
+  $image = $expertiseImages[$serviceIndex % $expertiseImages.Count]
+  $body = "<img class='wen-media wen-expertise-media' src='$image' alt='$expertiseImageAlt' loading='eager'><section class='wen-grid'><div class='wen-section'><h2>The assignment</h2><p>Clarify the event objective, operating model and decisions required to move forward.</p></div><div class='wen-section'><h2>Capabilities</h2><ul>$capabilityList</ul></div><div class='wen-section'><h2>Approach</h2><p>WEN brings senior event leadership, practical planning and specialized support around the needs of the assignment.</p></div><div class='wen-section'><h2>Related experience</h2><p><a href='/work'>View selected work in motion.</a></p></div></section>"
   Write-Route "/expertise/$($service.slug)" (Page $service.title 'World Events Network' $service.intro $body 'Discuss an Event' 'WebPage' $true)
 }
 
