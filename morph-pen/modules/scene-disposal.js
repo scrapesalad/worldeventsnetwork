@@ -1,0 +1,43 @@
+export function disposeMorphScene({
+  renderLoop,
+  detachSceneEventBindings,
+  blobBaseGeometry,
+  blobGeometry,
+  innerGeometry,
+  coatGeometry,
+  glassMaterial,
+  innerMaterial,
+  coatMaterial,
+  cubeSplit,
+  backdrop,
+  floor,
+  generatedEnvironment,
+  disposeEnvironment,
+  musicReactiveInput,
+  surfaceHoverDust,
+  surfaceHoverGrid,
+  renderer,
+}) {
+  renderLoop.dispose();
+  detachSceneEventBindings();
+  surfaceHoverDust?.dispose();
+  surfaceHoverGrid?.dispose();
+
+  blobBaseGeometry.dispose();
+  blobGeometry.dispose();
+  innerGeometry.dispose();
+  coatGeometry.dispose();
+  cubeSplit?.dispose();
+  glassMaterial.dispose();
+  innerMaterial.map?.dispose();
+  innerMaterial.dispose();
+  coatMaterial.dispose();
+  backdrop.geometry.dispose();
+  backdrop.material.dispose();
+  floor.geometry.dispose();
+  floor.material.dispose();
+  generatedEnvironment.dispose?.();
+  disposeEnvironment();
+  musicReactiveInput.dispose();
+  renderer.dispose();
+}

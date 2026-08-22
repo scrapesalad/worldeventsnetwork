@@ -1,0 +1,127 @@
+{
+  "site": {
+    "name": "World Events Network",
+    "shortName": "WEN",
+    "founder": "Scott Kerr",
+    "description": "World Events Network develops, grows and delivers mass-participation sporting events and live experiences around the world.",
+    "homepageTitle": "World Events Network | Sports & Mass Participation Event Experts",
+    "homepageDescription": "World Events Network provides event strategy, marathon and race management, participant growth, event operations and elite-athlete expertise.",
+    "social": {
+      "companyLinkedIn": "https://www.linkedin.com/company/world-events-network/",
+      "scottLinkedIn": "https://www.linkedin.com/in/scott-kerr-22889b3/",
+      "facebook": "https://www.facebook.com/worldeventsnetwork/"
+    }
+  },
+  "person": {
+    "name": "Scott Kerr",
+    "title": "Event Strategist. Race Director. Producer.",
+    "image": "/images/scottkerr.png",
+    "linkedin": "https://www.linkedin.com/in/scott-kerr-22889b3/"
+  },
+  "navigation": [
+    { "label": "About", "href": "/about" },
+    { "label": "Expertise", "href": "/expertise" },
+    { "label": "Work", "href": "/work" },
+    { "label": "Let's Talk", "href": "/contact" }
+  ],
+  "capabilities": [
+    {
+      "index": "01",
+      "title": "Event Strategy",
+      "description": "Turning ideas into viable event concepts with clear positioning, operating models and paths to growth."
+    },
+    {
+      "index": "02",
+      "title": "Race Management",
+      "description": "Directing complex running and mass-participation events from early planning through race-day execution."
+    },
+    {
+      "index": "03",
+      "title": "Participant Growth",
+      "description": "Building stronger event brands, registration strategies and marketing systems designed to grow participation."
+    },
+    {
+      "index": "04",
+      "title": "Elite Athletes",
+      "description": "Recruiting and coordinating professional athletes while building competitive fields that elevate an event."
+    },
+    {
+      "index": "05",
+      "title": "Live Production",
+      "description": "Producing memorable sporting, entertainment and experiential events with disciplined operational execution."
+    }
+  ],
+  "services": [
+    { "title": "Mass Participation Event Development", "slug": "mass-participation-event-development" },
+    { "title": "Marathon & Race Management", "slug": "marathon-race-management" },
+    { "title": "Event Strategy & Feasibility", "slug": "event-strategy-feasibility" },
+    { "title": "Event Marketing & Participant Growth", "slug": "event-marketing-participant-growth" },
+    { "title": "Elite Athlete Recruitment", "slug": "elite-athlete-recruitment" },
+    { "title": "Event Operations", "slug": "event-operations" },
+    { "title": "Sponsorship & Brand Activation", "slug": "sponsorship-brand-activation" },
+    { "title": "Live Event Production", "slug": "live-event-production" }
+  ],
+  "work": [
+    {
+      "index": "01",
+      "title": "Salt Lake City Marathon",
+      "slug": "salt-lake-city-marathon",
+      "category": "Mass Participation Event Management",
+      "summary": "Large-scale race direction, event operations and participant experience for one of Utah's signature running events.",
+      "media": "/mock-work-images/Dash.webp",
+      "verificationRequired": true
+    },
+    {
+      "index": "02",
+      "title": "Rock 'n' Roll Salt Lake City",
+      "slug": "rock-n-roll-salt-lake-city",
+      "category": "Race Direction & Operations",
+      "summary": "Race leadership and operational expertise supporting the arrival of the Rock 'n' Roll Running Series in Salt Lake City.",
+      "media": "/mock-work-images/Racepoint.webp",
+      "verificationRequired": true
+    },
+    {
+      "index": "03",
+      "title": "Bangkok Midnight Marathon",
+      "slug": "bangkok-midnight-marathon",
+      "category": "International Event Consulting",
+      "summary": "Event expertise supporting a major international running experience in one of Southeast Asia's most dynamic cities.",
+      "media": "/mock-work-images/Commuter.webp",
+      "verificationRequired": true
+    },
+    {
+      "index": "04",
+      "title": "RockStock",
+      "slug": "rockstock",
+      "category": "Live Event Production",
+      "summary": "A large-scale classic rock experience combining live entertainment, production and audience-focused event design.",
+      "media": "/mock-work-images/Roger.webp",
+      "verificationRequired": true
+    }
+  ],
+  "routes": [
+    "/",
+    "/about",
+    "/scott-kerr",
+    "/expertise",
+    "/expertise/mass-participation-event-development",
+    "/expertise/marathon-race-management",
+    "/expertise/event-strategy-feasibility",
+    "/expertise/event-marketing-participant-growth",
+    "/expertise/elite-athlete-recruitment",
+    "/expertise/event-operations",
+    "/expertise/sponsorship-brand-activation",
+    "/expertise/live-event-production",
+    "/work",
+    "/work/salt-lake-city-marathon",
+    "/work/rock-n-roll-salt-lake-city",
+    "/work/bangkok-midnight-marathon",
+    "/work/rockstock",
+    "/insights",
+    "/event-growth-audit",
+    "/event-feasibility",
+    "/contact",
+    "/privacy",
+    "/404"
+  ]
+}
