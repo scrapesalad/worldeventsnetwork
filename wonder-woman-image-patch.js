@@ -2,7 +2,8 @@
   const mediaReplacements = new Map([
     ["/assets/Clips/remix-maze.mp4", {
       src: "/public/videos/wonderwoman/wonderwoman.mp4",
-      type: "video"
+      type: "video",
+      wonderWoman: true
     }],
     ["/assets/Clips/open.mp4", {
       src: "/public/videos/bangkok/bangkok.mp4",
@@ -14,7 +15,10 @@
     root.querySelectorAll("video").forEach((video) => {
       const replacement = mediaReplacements.get(video.getAttribute("src"));
       if (!replacement || replacement.type !== "image") {
-        if (replacement?.type === "video") video.src = replacement.src;
+        if (replacement?.type === "video") {
+          video.src = replacement.src;
+          if (replacement.wonderWoman) video.classList.add("tools-strip-media-asset-wonderwoman");
+        }
         return;
       }
       const image = document.createElement("img");
