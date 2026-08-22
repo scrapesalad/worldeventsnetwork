@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">World Events Network</title>
+  <desc id="desc">Sporting and live event strategy, growth and production.</desc>
+  <rect width="1200" height="630" fill="#07111f"/>
+  <rect x="42" y="42" width="1116" height="546" fill="#1f5eff"/>
+  <path d="M42 470h1116v118H42z" fill="#07111f" opacity=".92"/>
+  <g fill="#07111f" font-family="Arial, Helvetica, sans-serif" font-weight="900">
+    <text x="86" y="154" font-size="26" letter-spacing="3">WORLD EVENTS NETWORK</text>
+    <text x="82" y="360" font-size="142" letter-spacing="-8">EXPERIENCE</text>
+  </g>
+  <g fill="#f4f7fb" font-family="Arial, Helvetica, sans-serif" font-weight="700">
+    <text x="88" y="532" font-size="28" letter-spacing="4">SPORTS · RACES · LIVE EVENTS</text>
+    <text x="1014" y="154" font-size="24" text-anchor="end">WEN</text>
+  </g>
+</svg>

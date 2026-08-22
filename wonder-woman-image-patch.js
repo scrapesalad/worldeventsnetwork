@@ -1,9 +1,8 @@
 (function () {
   const mediaReplacements = new Map([
     ["/assets/Clips/remix-maze.mp4", {
-      src: "/public/images/wonderwoman/images%20(1).jpg",
-      alt: "Wonder Woman Run Series race-day photo collage",
-      type: "image"
+      src: "/public/videos/wonderwoman/wonderwoman.mp4",
+      type: "video"
     }],
     ["/assets/Clips/open.mp4", {
       src: "/public/videos/bangkok/bangkok.mp4",

@@ -1,0 +1,13 @@
+{
+  "name": "World Events Network",
+  "short_name": "WEN",
+  "description": "Sports and mass-participation event strategy, growth and production.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "lang": "en-US",
+  "icons": [
+    { "src": "/favicon-32x32.png", "sizes": "32x32", "type": "image/png" }
+  ]
+}

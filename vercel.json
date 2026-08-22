@@ -1,5 +1,19 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": null,
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.worldeventnetwork.com" }],
+      "destination": "https://worldeventnetwork.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "worldeventsnetwork.vercel.app" }],
+      "destination": "https://worldeventnetwork.com/$1",
+      "permanent": true
+    }
+  ]
 }
