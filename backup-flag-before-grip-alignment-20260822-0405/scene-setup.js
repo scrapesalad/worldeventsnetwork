@@ -61,20 +61,18 @@ function createFlagBearers({ world }) {
       createLimb(group, new THREE.Vector3(-0.08, 0.18, 0), new THREE.Vector3(-0.12, -0.42, 0)),
       createLimb(group, new THREE.Vector3(0.08, 0.18, 0), new THREE.Vector3(0.12, -0.42, 0)),
     ];
-    const holdX = side * (2.62 - 3.02);
+    const holdX = side * (2.82 - 3.24);
     const arms = [
       createLimb(group, new THREE.Vector3(side * 0.1, 0.58, 0), new THREE.Vector3(holdX, 0.62, 0.02)),
-      createLimb(group, new THREE.Vector3(side * 0.12, 0.38, 0), new THREE.Vector3(holdX, 0.18, 0.02)),
+      createLimb(group, new THREE.Vector3(side * 0.12, 0.38, 0), new THREE.Vector3(holdX, -0.08, 0.02)),
     ];
     const upperHand = new THREE.Mesh(handGeometry, material);
     const lowerHand = new THREE.Mesh(handGeometry, material);
     upperHand.position.set(holdX, 0.62, 0.02);
-    lowerHand.position.set(holdX, 0.18, 0.02);
+    lowerHand.position.set(holdX, -0.08, 0.02);
     group.add(upperHand, lowerHand);
 
-    // Keep the figures just outside the cloth, with their hands in the same
-    // local plane as its edge so the grip remains convincing during rotation.
-    group.position.set(side * 3.02, -0.64, 0.86);
+    group.position.set(side * 3.24, -0.64, 1.72);
     group.scale.setScalar(0.92);
     group.renderOrder = 5;
     world.add(group);
@@ -94,7 +92,7 @@ function createFlagBearers({ world }) {
         group.rotation.y = Math.sin(motionPhase * 0.5) * 0.08 * visibility;
         legs[0].rotation.z = stride * 0.18 * visibility;
         legs[1].rotation.z = -stride * 0.18 * visibility;
-        group.position.x = side * 3.02 + stride * 0.025 * visibility;
+        group.position.x = side * 3.24 + stride * 0.035 * visibility;
       });
     },
     dispose() {
